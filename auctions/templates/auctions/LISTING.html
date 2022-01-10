@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>{{listitem.title}}</title>
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/watchlist/watchlist.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/LISTING/listing.js' %}"></script>
+    </head>
+
+
+
+    <body>
+        <div class="headerdiv jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LISTERR-COMMERCE</strong></b></h1>
+            <hr>
+            <p class="leadheaderdiv">
+                {% if user.is_authenticated %}
+                  <b>Hi There! Hope you have a Great Day! </b>
+                  Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                  <b>Hi There! Hope you have a Great Day!</b>
+                  Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+
+        <div style="display:flex;">
+          <div style="width:13%; border-top-right-radius:25px; border-bottom-right-radius:25px; border-right: 2px solid #d9dbda; background-color: rgb(38, 38, 65);">
+            <nav class="nav flex-column">
+                <div class="text-center" style="margin-top:15px;">
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">EXPLORE</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'index' %}" style="width:100%; border-style: hidden;">Active Listings</a>
+                        <a class="btn btn-outline-light" href="{% url 'categories' %}" style="width:100%; border-style: hidden;">Categories</a>
+                    </div>
+                </div>
+                <div style="margin-top:15px;">
+                    {% if not user.is_authenticated %}
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">ACTION</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'login' %}" style="width:100%; border-style: hidden;">Log In</a>
+                        <a class="btn btn-outline-light" href="{% url 'register' %}" style="width:100%; border-style: hidden;">Register</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="margin-top:15px;">
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">PROFILE</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'watchlist' %}" style="width:100%; border-style: hidden;">Watchlist</a>
+                        <a class="btn btn-outline-light" href="{% url 'create_listing' %}" style="width:100%; border-style: hidden;">Create Listing</a>
+                        <a class="btn btn-outline-light" href="{% url 'logout'  %}" style="width:100%; border-style: hidden;">Log Out</a>
+                    </div>
+                    {% endif %}
+                </div>
+              </nav>
+        </div>
+
+        <div class="text-center" style="width: 87%; display:block;">
+            <div class="text-center" style="border-radius: 30px; margin:20px; background-color:white; padding:20px;">
+
+                <div style="display:flex;">
+                    <div style="height:400px; width:50%;">
+                    {% if listitem.picture is None %}
+                        <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:99%; width:99%; border-radius:10px;">
+                    {% else %}
+                        <img src={{listitem.picture}} style="height:99%; width:99%; border-radius:10px;"></li>{% endif %}
+                    </div>
+    
+                    <div style="width:50%">
+                        <h1 class="display-4"><b>{{listitem.title}}</b></h1><hr style="width:80%;">
+                        {%if listitem.status in "A"%}<h3 style="color:darkcyan; margin:40px;"><b>(ACTIVE)</b></h3>{% else %}<h3 style="color:brown; margin:20px"><b>(CLOSED)</b></h3>{% endif %}
+                        <ul class="list-group list-group-horizontal" style="margin:50px;"><li class="list-group-item" style="width:1900px; border-top: hidden; border-bottom: hidden;"><h1 id="curprice" class="display-5"><strong>Current Price: $ {{listitem.c_price}}</strong></li></ul>
+                            {% if user.is_authenticated %}
+                            <form>
+                                <div class="text-center">
+                                    <button data-listname="{{listitem.title}}" type="submit" class="btn btn-outline-primary" id="todo">{{but_message}}</button>
+                                </div>        
+                            </form>{% endif %}
+                    </div>
+                </div>
+
+                <hr><ul class="list-group list-group-horizontal">
+                    <li class="list-group-item" style="width:25%; border-top: hidden; border-bottom: hidden;">Created by: {{listitem.username}}</li>
+                    <li class="list-group-item" style="width:25%; border-top: hidden; border-bottom: hidden;">Listing Opened At: {{listitem.listing_open_date}}</li>
+                    <li class="list-group-item" style="width:25%; border-top: hidden; border-bottom: hidden;">Category: {{listitem.category}}</li>
+                    <li class="list-group-item" style="width:25%; border-top: hidden; border-bottom: hidden;">Listing Price: $ {{listitem.l_price}}</li>
+                </ul><hr>
+
+                <div class="jumbotron text-center" style="background-color: #ffffff;">
+                    <p>{{listitem.description}}</p>
+                </div>
+            
+
+                <div style="padding:20px;">
+
+                    {% if listitem.status|stringformat:"s" == "A" %}
+                    <li id="bidstat" class="list-group-item list-group-item-warning">Current Bidder: <strong>{{listitem.c_bidder}}</strong>, bidding at <strong>$ {{listitem.c_price}}</strong></li>
+                    {% endif %}
+
+                    {% if listitem.status|stringformat:"s" == "C" %}
+                    {% if listitem.c_bidder == user.get_username %}
+                        <div class="alert alert-danger">BIDDING CLOSED  -----   UNSOLD</div>
+                    {% else %}
+                        <div class="alert alert-danger">BIDDING CLOSED  -----   {{listitem.c_bidder}} WINS THE BID @ $ {{listitem.c_price}}</div>
+                    {% endif %}
+                    {% endif %}
+                        
+
+                    <div style="margin:20px">
+                        {% if user.is_authenticated %}
+                        {% if listitem.status|stringformat:"s" == "A" %}
+                            {% if c_user|stringformat:"s" == listitem.username|stringformat:"s" %}
+                            <form action="LISTING" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="listing_name" value="{{listitem.title}}">
+                                <input type="hidden" name="status_change" value="C">
+                                <button type="submit" class="btn btn-danger">Close Current Listing</button>
+                            </form>
+                            {% else %}
+                            <div class="jumbotron text-center">
+                                <div style="display:none" id="al" class="alert alert-danger"></div>
+
+                                <form>
+                                    <input type="number" step="any" placeholder="Enter bid for listing" name="new_bid" id="new_bid" style="width:40%; height: 38px; border-radius:5px; background-color:white">
+                                    <button data-user="{{user.get_username}}" data-currentbid="{{listitem.c_price}}" data-listingname="{{listitem.title}}" id="submitbid" type="submit" class="btn btn-outline-info" style="height:28px; padding:3px;">Enter New Bid</button>
+                                </form>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div id="commentdiv" class="list-group list-group-flush" style="margin:20px">
+                <h1 class="display-6 text-center">  Comments  </h1><hr>
+                <div id="com_alert">
+                </div>
+                {% if user.is_authenticated %}
+                <div class="form-group">
+                    <textarea class="form-control" style="margin:20px;" name="new_comment" id="comment_body" placeholder="Add New Comment"></textarea>
+                    <button data-by="{{user.get_username}}" data-title="{{listitem.title}}" id="new_com_submit" class="form-control btn btn-outline-dark" style="border-left:hidden; border-right:hidden;" type="submit">Add Comment</button>
+                </div>
+                {% endif %}
+                {% for cmt in comnts %}
+                <li class="list-group-item list-group-item-light" style="border-radius: 25px;"><p>{{cmt.comment}}</p> <p class="float-right">-- @ -- {{cmt.usern}}</p></li>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+        </div>
+
+        
+    </body>

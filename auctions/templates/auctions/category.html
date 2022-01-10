@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>{{c_name}}</title>
+        <link rel="stylesheet" href="{% static 'auctions/categories/categories.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/categories/categories.js' %}"></script>
+    </head>
+
+
+
+    <body>
+        <div class="headercat jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LISTERR-COMMERCE</strong></b></h1>
+            <hr>
+            <p class="leadheadercat">
+                {% if user.is_authenticated %}
+                  <b>Hi There! Hope you have a Great Day! </b>
+                  Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                  <b>Hi There! Hope you have a Great Day!</b>
+                  Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+          
+        <div style="display:flex;">
+          <div style="width:13%; border-top-right-radius:25px; border-bottom-right-radius:25px; border-right: 2px solid #d9dbda; background-color: rgb(38, 38, 65);">
+            <nav class="nav flex-column">
+                <div class="text-center" style="margin-top:15px;">
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">EXPLORE</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'index' %}" style="width:100%; border-style: hidden;">Active Listings</a>
+                        <a class="btn btn-outline-light" href="{% url 'categories' %}" style="width:100%; border-style: hidden;">Categories</a>
+                    </div>
+                </div>
+                <div style="margin-top:15px;">
+                    {% if not user.is_authenticated %}
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">ACTION</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'login' %}" style="width:100%; border-style: hidden;">Log In</a>
+                        <a class="btn btn-outline-light" href="{% url 'register' %}" style="width:100%; border-style: hidden;">Register</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="margin-top:15px;">
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">PROFILE</button>
+                    <div>
+                        <hr>
+                        <a class="btn btn-outline-light" href="{% url 'watchlist' %}" style="width:100%; border-style: hidden;">Watchlist</a>
+                        <a class="btn btn-outline-light" href="{% url 'create_listing' %}" style="width:100%; border-style: hidden;">Create Listing</a>
+                        <a class="btn btn-outline-light" href="{% url 'logout'  %}" style="width:100%; border-style: hidden;">Log Out</a>
+                    </div>
+                    {% endif %}
+                </div>
+              </nav>
+        </div>
+
+        <div class="text-center" style="width: 90%;">
+          <div class="jumbotron" style="height:250px; background-color:#581313;">
+            <div class="container text-center ">
+                <h1 class="display-6" style="color:azure"><b>{{c_name}}</b></h1>
+                <p class="lead" style="color:azure"><b>VIEW ALL THE ITEMS IN {{c_name}} CATEGORY</b></p>
+            </div>
+        </div>
+            
+        
+        <div class="text-center" style="margin:25px; color:rgb(17, 87, 63);"><h4 class="display-6">ACTIVE</h4></div>
+        <div class="card-columns text-center" id="active">
+            {% for itm in itmsactive %}
+            <div class="card border-info p-3">
+                {% if itm.picture is None %}
+                <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:50%; width:50%" class="card-img-top">
+                {% else %}
+                <img src={{itm.picture}} class="card-img-top" style="height:50%; width:50%">
+                {% endif %}
+                <div class="card-body">
+                  <h3 class="card-title">{{itm.title}}</h3>
+                  <p class="card-text"><i>{{itm.description}}</i></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">CATEGORY: {%if itm.status in "A"%}<p style="color:darkcyan"><b>(ACTIVE)</b></p>{% else %}<p style="color:brown"><b>(CLOSED)</b></p>{% endif %} {{itm.category}}</li>
+                    <li class="list-group-item">Item Listed By: {{itm.username}}</li>
+                  <li class="list-group-item">Item Listing Date: {{itm.listing_open_date}}</li>
+                </ul>
+                <div class="card-body">
+                    <h6 class="card-title">$ {{itm.c_price}}</h6>
+                    <div class="card-body">
+                    <form action="/LISTING" >
+                        <input type="hidden" name="l_name" value="{{itm.title}}">
+                        <button type="submit" class="btn btn-outline-info">View Listing</button>
+                    </form></div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="text-center" style="margin:25px; padding:25px;">No Listing in this category is ACTIVE.</div>
+        {% endfor %} 
+        </div>
+        
+        <div class="text-center" style="margin:25px; color:rgb(87, 39, 17);"><h4 class="display-6">CLOSED</h4></div>
+        <div class="card-columns text-center" id="closed">
+            {% for itm in itmsclose %}
+            <div class="card border-info p-3">
+                {% if itm.picture is None %}
+                <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:50%; width:50%" class="card-img-top">
+                {% else %}
+                <img src={{itm.picture}} class="card-img-top" style="height:50%; width:50%">
+                {% endif %}
+                <div class="card-body">
+                  <h3 class="card-title">{{itm.title}}</h3>
+                  <p class="card-text"><i>{{itm.description}}</i></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">CATEGORY: {%if itm.status in "A"%}<p style="color:darkcyan"><b>(ACTIVE)</b></p>{% else %}<p style="color:brown"><b>(CLOSED)</b></p>{% endif %} {{itm.category}}</li>
+                    <li class="list-group-item">Item Listed By: {{itm.username}}</li>
+                  <li class="list-group-item">Item Listing Date: {{itm.listing_open_date}}</li>
+                </ul>
+                <div class="card-body">
+                    <h6 class="card-title">$ {{itm.c_price}}</h6>
+                    <div class="card-body">
+                    <form action="/LISTING" >
+                        <input type="hidden" name="l_name" value="{{itm.title}}">
+                        <button type="submit" class="btn btn-outline-info">View Listing</button>
+                    </form></div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="text-center" style="margin:25px; padding:25;">No Listing in this category is CLOSED.</div>
+        {% endfor %} 
+        </div>
+
+        
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+        

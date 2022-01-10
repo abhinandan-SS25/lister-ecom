@@ -1,0 +1,21 @@
+.listview {
+    width:100%; border-style: hidden;
+}
+
+.headerdiv {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+    border-color:rgb(6, 69, 128);
+    border-style:hidden inset hidden inset; 
+    border-width: 75px; border-radius: 5px; 
+    background-color: rgb(8, 91, 168); 
+    color: #ffffff; 
+    text-decoration:solid;
+}
+  
+.leadheaderdiv {
+    color:rgb(228, 246, 255);
+    font-size: 1.25rem;
+    font-weight: 300;
+}

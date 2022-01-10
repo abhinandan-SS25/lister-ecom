@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Auctions</title>
+        <link rel="stylesheet" href="C:\Users\abhin\Desktop\Dev\heroku\listerr\auctions\static\auctions\index\bootstrap.css">
+    </head>
+    <body>
+        <div class="headerdiv jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>AUCTIONS</strong></b></h1>
+            <hr>
+            <p class="leadheaderdiv">
+                {% if user.is_authenticated %}
+                <b>Hi There! Hope you have a Great Day! </b>
+                    Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                <b>Hi There! Hope you have a Great Day!</b>
+                Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+            
+        <div class="text-center">
+            <div style="margin:25px">
+                <div><button class="btn btn-outline-dark" type="button" data-target="#d" data-toggle="collapse" aria-expanded="false" aria-controls="d">EXPLORE</button></div>
+                        <div class="collapse" id="d">
+                            <hr>
+                        <a class="dropdown-item" href="{% url 'index' %}">Active Listings</a>
+                        <a class="dropdown-item" href="{% url 'categories' %}">Categories</a>
+                    </div>
+            </div>
+            <div>
+                {% if not user.is_authenticated %} 
+                    <div><button class="btn btn-outline-dark" type="button" data-target="#dm_a" data-toggle="collapse" aria-expanded="false" aria-controls="dm_a">ACTION</button></div>
+                        <div class="collapse" id="dm_a">
+                            <hr>
+                        <a class="dropdown-item" href="{% url 'login' %}">Log In</a>
+                        <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+                    </div>
+                  {% endif %} 
+                </div>
+                <div style="margin:25px">
+                  {% if user.is_authenticated %}
+                  <button class="btn btn-outline-dark" type="button" data-target="#dm_c" data-toggle="collapse" aria-expanded="false" aria-controls="dm_c">
+                    PROFILE
+                  </button>
+                  <div class="collapse" id="dm_c">
+                      <hr>
+                      <a class="dropdown-item" href="{% url 'watchlist' %}">Watchlist</a>
+                      <a class="dropdown-item" href="{% url 'create_listing' %}">Create Listing</a>
+                      <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                  </div>
+                {% endif %} 
+            </div>
+          </div>
+        </div>
+        
+        <hr>
+        <div class="jumbotron" style="background-color:#FFFFF5; height:50px">
+          <div class="container text-center ">
+                <h1 class="display-6"><b>ACTIVE LISTINGS</b></h1>
+                <p class="lead" style="background-color:ebony"><b>EXPLORE THE ACTIVE LISTINGS</b></p>
+              </div>
+              </div>
+                
+          
+              <div class="card-columns text-center" style="padding: 55px;margin: 0px;">
+              {% for item in items %}
+              {% if item.status in "A" %}
+              <div class="card p-3" style="box-shadow: 4px 3px 8px 1px #969696;-webkit-box-shadow: 4px 3px 8px 1px #969696; border-radius: 20px; padding: 5px; border-color: rgb(2, 67, 121); margin: 25px; width: 90%; height: 75%;">
+                  {% if item.picture is None %}
+                  <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:50%; width:50%" class="card-img-top">
+                  {% else %}
+                  <img src={{item.picture}} class="card-img-top" style="height:50%; width:50%">
+                  {% endif %}
+                  <div class="card-body">
+                    <h3 class="card-title">{{item.title}}</h3>
+                    <p class="card-text"><i>{{item.description}}</i></p>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">CATEGORY: {{item.category}}</li>
+                    <li class="list-group-item">Item Listed By: {{item.username}}</li>
+                    <li class="list-group-item">Item Listing Date: {{item.listing_open_date}}</li>
+                  </ul>
+                  <div class="card-body">
+                      <h6 class="card-title">$ {{item.c_price}}</h6>
+                      <div class="card-body">
+                      <form action="/LISTING" >
+                          <input type="hidden" name="l_name" value="{{item.title}}">
+                          <button type="submit" class="btn btn-outline-info">View Listing</button>
+                      </form></div>
+                  </div>
+                </div>
+              {% endif %}
+              {% endfor %}
+              </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+    </body>
+</html>
+
+
+
+
+
+
+CATEGORIES>HTML
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>Listerr E Commerce Website</title>
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/categories/categories.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/categories/categories.js' %}"></script>
+    </head>
+
+
+
+    <body>
+        <div class="headercat jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LISTERR-COMMERCE</strong></b></h1>
+            <hr>
+            <p class="leadheadercat">
+                {% if user.is_authenticated %}
+                  <b>Hi There! Hope you have a Great Day! </b>
+                  Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                  <b>Hi There! Hope you have a Great Day!</b>
+                  Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+          
+        <div class="text-center">
+          <div style="margin:25px">
+              <div><button class="btn btn-outline-dark" type="button" data-target="#d" data-toggle="collapse" aria-expanded="false" aria-controls="d">EXPLORE</button></div>
+                      <div class="collapse" id="d">
+                          <hr>
+                      <a class="dropdown-item" href="{% url 'index' %}">Active Listings</a>
+                      <a class="dropdown-item" href="{% url 'categories' %}">Categories</a>
+                  </div>
+          </div>
+          <div>
+              {% if not user.is_authenticated %} 
+                  <div><button class="btn btn-outline-dark" type="button" data-target="#dm_a" data-toggle="collapse" aria-expanded="false" aria-controls="dm_a">ACTION</button></div>
+                      <div class="collapse" id="dm_a">
+                          <hr>
+                      <a class="dropdown-item" href="{% url 'login' %}">Log In</a>
+                      <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+                  </div>
+                {% endif %} 
+              </div>
+              <div style="margin:25px">
+                {% if user.is_authenticated %}
+                <button class="btn btn-outline-dark" type="button" data-target="#dm_c" data-toggle="collapse" aria-expanded="false" aria-controls="dm_c">
+                  PROFILE
+                </button>
+                <div class="collapse" id="dm_c">
+                    <hr>
+                    <a class="dropdown-item" href="#">Watchlist</a>
+                    <a class="dropdown-item" href="{% url 'create_listing' %}">Create Listing</a>
+                    <a class="dropdown-item" href="{% url 'logout'  %}">Log Out</a>
+                </div>
+              {% endif %} 
+            </div>
+          </div>
+        </div>
+
+        <div id="carouselCategoryCaptions" class="carousel slide" data-ride="carousel">
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="jumbotron d-block-w-100" style="background-color:#581313; height:250px">
+                        <div class="container text-center ">
+                            <h1 class="display-6" style="color:azure"><b>CATEGORIES</b></h1>
+                            <hr>
+                            <button class="btn btn-outline-warning" type="button" data-target="#de" data-toggle="collapse" aria-expanded="false" aria-controls="de">VIEW THE CATEGORIES OF THE ITEMS AVAILABLE</button>
+                        </div>
+                    </div>
+                </div>
+                {% for ctg in ctgs %}
+                <div class="carousel-item">
+                    <div class="jumbotron d-block-w-100" style="background-color:#581313; height:250px">
+                        <div class="container text-center ">
+                            <h1 class="display-6" style="color:azure"><b>{{ctg.category}}</b></h1>
+                            <p class="lead" style="color:azure"><b>VIEW ALL THE ITEMS IN THIS CATEGORY</b></p>
+                        </div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5> </h5>
+                            <p>
+                                <form action="CATEGORY">
+                                    <input type="hidden" name="category_title" value="{{ctg.category}}">
+                                    <button type="submit" class="btn btn-outline-danger" >View</button>
+                                </form>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+    
+                <a class="carousel-control-prev" href="#carouselCategoryCaptions" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselCategoryCaptions" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <hr>
+            <div class="collapse text-center" id="de" style="background-color: rgb(55, 56, 14); padding:50px;">
+                <input class="form-control" id="searchcategory" type="text" placeholder="Search for a Category" onkeyup="searchforcat()">
+                {% for ctg in ctgs %}
+                    <form action="CATEGORY">
+                        <input type="hidden" name="category_title" value="{{ctg.category}}">
+                        <button type="submit" class="btn btn-outline-light controlbut">View Items in {{ctg.category}} Category</button>
+                    </form>
+                {% endfor %}
+            </div>
+            <div id="pad"></div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+    </body>
+
+    function searchforcat () {
+        var input, filter;
+        input = document.querySelector("#searchcategory");
+        filter = input.value.toUpperCase();
+        document.querySelectorAll(".controlbut").forEach( function(button) {
+            var val = button.innerHTML.toUpperCase();
+            if (val.indexOf(filter) > -1){
+                button.className="btn btn-outline-dark controlbut";
+                button.disabled=false;
+            }
+            else {
+                button.className="btn btn-outline-light controlbut";
+                button.disabled=true;
+            }
+        })
+    }
+
+
+
+
+
+    <WATCHLIST class="html">
+        {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>Listerr E Commerce Website</title>
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/watchlist/watchlist.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/watchlist/watchlist.js' %}"></script>
+    </head>
+
+
+
+    <body>
+        <div class="headerdiv jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LISTERR-COMMERCE</strong></b></h1>
+            <hr>
+            <p class="leadheaderdiv">
+                {% if user.is_authenticated %}
+                  <b>Hi There! Hope you have a Great Day! </b>
+                  Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                  <b>Hi There! Hope you have a Great Day!</b>
+                  Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+          
+        <div class="text-center">
+          <div style="margin:25px">
+              <div><button class="btn btn-outline-dark" type="button" data-target="#d" data-toggle="collapse" aria-expanded="false" aria-controls="d">EXPLORE</button></div>
+                      <div class="collapse" id="d">
+                          <hr>
+                      <a class="dropdown-item" href="{% url 'index' %}">Active Listings</a>
+                      <a class="dropdown-item" href="{% url 'categories' %}">Categories</a>
+                  </div>
+          </div>
+          <div>
+              {% if not user.is_authenticated %} 
+                  <div><button class="btn btn-outline-dark" type="button" data-target="#dm_a" data-toggle="collapse" aria-expanded="false" aria-controls="dm_a">ACTION</button></div>
+                      <div class="collapse" id="dm_a">
+                          <hr>
+                      <a class="dropdown-item" href="{% url 'login' %}">Log In</a>
+                      <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+                  </div>
+                {% endif %} 
+              </div>
+              <div style="margin:25px">
+                {% if user.is_authenticated %}
+                <button class="btn btn-outline-dark" type="button" data-target="#dm_c" data-toggle="collapse" aria-expanded="false" aria-controls="dm_c">
+                  PROFILE
+                </button>
+                <div class="collapse" id="dm_c">
+                    <hr>
+                    <a class="dropdown-item" href="#">Watchlist</a>
+                    <a class="dropdown-item" href="{% url 'create_listing' %}">Create Listing</a>
+                    <a class="dropdown-item" href="{% url 'logout'  %}">Log Out</a>
+                </div>
+              {% endif %} 
+            </div>
+          </div>
+        </div>
+
+        <div class="jumbotron" style="background-color:#FFFFF5; height:145px;">
+            <div class="container text-center ">
+                  <h1 class="display-6"><b>WATCHLIST</b></h1><hr>
+                  <p class="lead" style="background-color:ebony"><b></b></p>
+                  <div style="background-color: #FFFFF5;">
+                  <ul class="list-group list-group-flush" style="background-color: #FFFFF5;">
+                    {% for w in watching %}
+                    <li class="list-group-item float-left" style="background-color: #FFFFF5;">
+                    <form action="/LISTING" >
+                        <input type="hidden" name="l_name" value="{{w.item_name}}">
+                        <button type="submit" class="btn">{{w.item_name}}</button>
+                    </form></li>
+                    {% endfor %}
+                  </ul>
+                  </div>
+        
+                  <div style="margin:25px;">
+                    <button class="btn btn-outline-danger" type="button" data-target="#detailed_view" data-toggle="collapse" aria-expanded="false" aria-controls="detailed_view">DETAILED VIEW</button>
+                </div>
+                    <div class="collapse" id="detailed_view">
+                    <hr>
+                    <div class="card-columns text-center">
+                        {% for itemw in watching %}
+                        {% for item in items %}    
+                        {% if item.title|stringformat:"s" == itemw.item_name|stringformat:"s" %}
+                        <div class="card p-3">
+                            {% if item.picture is None %}
+                            <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:50%; width:50%" class="card-img-top">
+                            {% else %}
+                            <img src={{item.picture}} class="card-img-top" style="height:50%; width:50%">
+                            {% endif %}
+                            <div class="card-body">
+                              <h3 class="card-title">{{item.title}}</h3>
+                              <p class="card-text"><i>{{item.description}}</i></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item">CATEGORY: {%if item.status in "A"%}<p style="color:darkcyan"><b>(ACTIVE)</b></p>{% else %}<p style="color:brown"><b>(CLOSED)</b></p>{% endif %} {{item.category}}</li>
+                              <li class="list-group-item">Item Listed By: {{item.username}}</li>
+                              <li class="list-group-item">Item Listing Date: {{item.listing_open_date}}</li>
+                            </ul>
+                            <div class="card-body">
+                                <h6 class="card-title">$ {{item.c_price}}</h6>
+                                <div class="card-body">
+                                <form action="/LISTING" >
+                                    <input type="hidden" name="l_name" value="{{item.title}}">
+                                    <button type="submit" class="btn btn-outline-info">View Listing</button>
+                                </form></div>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% endfor %}{% endfor %}
+                        </div>            
+                    </div>
+                  <hr>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    </body>
+    </WATCHLIST>

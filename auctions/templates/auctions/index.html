@@ -1,0 +1,129 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>Listerr E Commerce Website</title>
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/index/index.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/index/index.js' %}"></script>
+    </head>
+
+
+
+    <body>
+        <div class="headerdiv jumbotron-fluid text-center" style="margin:0px; border-radius:0px;">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LISTERR-COMMERCE</strong></b></h1>
+            <hr>
+            <p class="leadheaderdiv">
+                {% if user.is_authenticated %}
+                  <b>Hi There! Hope you have a Great Day! </b>
+                  Signed in as <strong>{{ user.username }}</strong>
+                {% else %}
+                  <b>Hi There! Hope you have a Great Day!</b>
+                  Not signed in.
+                {% endif %}
+            </p>
+            </div>
+        </div>  
+          
+        <div class="text-center" style="display:flex;">
+          <div style="width:13%; background-color: rgb(38, 38, 65); border-right: 2px solid #d9d9db; min-height:450px; border-bottom-right-radius : 25px;">
+          <nav class="nav flex-column">
+            <div class="text-center" style="margin-top:15px;">
+                <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">EXPLORE</button>
+                <div>
+                    <hr>
+                    <a class="btn btn-outline-light" href="{% url 'index' %}" style="width:100%; border-style: hidden;">Active Listings</a>
+                    <a class="btn btn-outline-light" href="{% url 'categories' %}" style="width:100%; border-style: hidden;">Categories</a>
+                </div>
+            </div>
+            <div style="margin-top:15px;">
+                {% if not user.is_authenticated %}
+                <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">ACTION</button>
+                <div>
+                    <hr>
+                    <a class="btn btn-outline-light" href="{% url 'login' %}" style="width:100%; border-style: hidden;">Log In</a>
+                    <a class="btn btn-outline-light" href="{% url 'register' %}" style="width:100%; border-style: hidden;">Register</a>
+                </div>
+                {% endif %}
+            </div>
+            <div style="margin-top:15px;">
+                {% if user.is_authenticated %}
+                <button class="btn btn-outline-warning" type="button" disabled style="width:100%; border-style: hidden hidden solid hidden;">PROFILE</button>
+                <div>
+                    <hr>
+                    <a class="btn btn-outline-light" href="{% url 'watchlist' %}" style="width:100%; border-style: hidden;">Watchlist</a>
+                    <a class="btn btn-outline-light" href="{% url 'create_listing' %}" style="width:100%; border-style: hidden;">Create Listing</a>
+                    <a class="btn btn-outline-light" href="{% url 'logout'  %}" style="width:100%; border-style: hidden;">Log Out</a>
+                </div>
+                {% endif %}
+            </div>
+          </nav>
+        </div>
+
+        <div class="text-center" style="width: 87%;">
+        <div class="jumbotron" style="padding-bottom:10px;">
+          <div class="container text-center ">
+            <h1 class="display-6"><b>ACTIVE LISTINGS</b></h1>
+            <p class="lead" style="background-color: ebony;"><b>EXPLORE THE ACTIVE LISTINGS</b></p>
+          </div>
+        </div>
+                
+        <div style="margin:50px; display:flex;">
+          <input  class="form-group" type="text" id="titleSearch" onkeyup="search_title()" placeholder="Search for a Specific Listing" title="Type in a category" style="width:95%; border-radius:5px; padding:4px;">
+          <div style="width:50px;"  class="form-control text-center" role="status">
+            <div id="spinner" style="display:none;" class="spinner-border spinner-border-sm" role="status"></div>
+          </div>
+        </div>
+        
+        {% for item in items %}
+        {% if item.status in "A" %}
+        <form action="/LISTING" >
+          <input type="hidden" name="l_name" value="{{item.title}}">
+      
+        <button type="submit" class="btn btn-light" style="max-height:300px; margin:15px; padding:0px; width:95%">
+          <div class="row no-gutters">
+            <div style="width:40%;">
+              {% if item.picture is None %}
+                  <img src="https://cdn0.iconfinder.com/data/icons/technology-business-and-people/1000/file_light-15-512.png" style="height:300px; width:50%" class="card-img">
+              {% else %}
+                  <img src={{item.picture}} class="card-img" style="height:298px; width:450px; margin:0px; padding:0px;">
+              {% endif %}
+            </div>
+            <div class="text-center" style="width:60%">
+              <div class="card-body">
+                <h2 id="title{{item.id}}" class="card-title" >{{item.title}}</h2>
+                <hr>
+                <div style="display:flex; width:100%;">
+                  <div style="width:49%; text-align:left;">
+                  <div>Created by: {{item.username}}</div>
+                  <div>Listing Opened At: {{item.listing_open_date}}</div>
+                  <div>Listing Price: $ {{item.l_price}}</div>
+                  </div>
+                  <div style="width:49%; text-align:center; padding-top:25px;">
+                      <h3>${{item.c_price}}</h3>
+                  </div>
+                  </div>
+                  <hr>
+                  <small>{{item.description|slice:300}}...</small>
+              </div>
+            </div>
+          </div>
+        </button>
+      </form>
+        {% endif %}
+        {% endfor %}
+
+        
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+      </body>
+</html>
+
+
+

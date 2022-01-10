@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+    <head>
+        <title>LOGIN to LISTER</title>
+        <link rel="stylesheet" href="{% static 'auctions/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'auctions/login/login.css' %}">
+        <script type="text/javascript" src="{% static 'auctions/login/login.js' %}"></script>
+    </head>
+
+
+
+    <body style="background-color: #FFFFF5; background-image:none;">
+        <div class="headerlogin jumbotron-fluid text-center">
+            <div class="container">
+            <h1 class="display-4"><b><strong>LOGIN</strong></b></h1>
+            <hr>
+            <p class="leadheaderlogin">
+                <b>Login To Your Account for LISTER-COMMERCE</b>
+            </p>
+            </div>
+        </div>  
+          
+        <div class="text-center">
+          <div style="margin:25px">
+              <div><button class="btn btn-outline-dark" type="button" data-target="#d" data-toggle="collapse" aria-expanded="false" aria-controls="d">EXPLORE</button></div>
+                    <div class="collapse" id="d">
+                          <hr>
+                        <a class="dropdown-item" href="{% url 'index' %}">Active Listings</a>
+                        <a class="dropdown-item" href="{% url 'categories' %}">Categories</a>
+                    </div>
+        </div>
+
+            {% if message %}
+                <div class="text-center alert alert-danger">{{ message }}</div>
+            {% endif %}
+            <div id="cred_error" class="text-center alert alert-danger" style="display:none;"></div>
+
+
+        <div class="jumbologin text-center">
+            <form onsubmit="return authlog();" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input autofocus class="form-control" type="text" id="username" name="username" placeholder="Username" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" id="password" name="password" placeholder="Password">
+                </div>
+                    <input class="btn btn-outline-success" type="submit" value="Login">
+            </form>
+        </div>
+
+        <div class="text-center"><p class="lead">Don't have an account? <a href="{% url 'register' %}">Register here.</a></p></div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+    
+
+    </body>
