@@ -14,9 +14,15 @@ from pathlib import Path
 import django_heroku
 from decouple import config
 import dj_database_url
+import dj_database_url
+import dotenv
+import os
+import psycopg2
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -78,10 +84,21 @@ WSGI_APPLICATION = 'listerr.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+try:
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'db6vaovvu94qk5',
+    'USER' : 'kfjurewhkuzpms',
+    'PASSWORD' : '5e8152c448f0578bff930b1d0b1e73e16a4a8cb848ee7b1994812461a1e1f725',
+    'HOST' : 'ec2-18-209-169-66.compute-1.amazonaws.com',
+    'PORT' : '5432'}
+    }  
+except:
+    DATABASES = {    
+    'default': {        
+        'ENGINE': 'django.db.backends.sqlite3',        
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),    
     }
 }
 
