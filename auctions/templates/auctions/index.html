@@ -83,7 +83,7 @@
         {% for item in items %}
         {% if item.status in "A" %}
         <form action="/LISTING" >
-          <input type="hidden" name="l_name" value="{{item.title}}">
+          <input type="hidden" name="l_id" value="{{item.id}}">
       
         <button type="submit" class="btn btn-light" style="max-height:300px; margin:15px; padding:0px; width:95%">
           <div class="row no-gutters">

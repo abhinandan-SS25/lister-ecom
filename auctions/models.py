@@ -33,11 +33,12 @@ class Listing(models.Model):
         return f"   Name : {self.title};  Category : {self.category}"
 
 class Comment(models.Model):
-    listing=models.CharField(max_length=300)
+    listing=models.IntegerField()
     usern=models.CharField(max_length=200)
     comment=models.TextField()
     com_on=models.DateTimeField(default=datetime.datetime.now().date())
 
 class Watchlist(models.Model):
     u_name=models.CharField(max_length=200)
+    item_id=models.IntegerField(default=0)
     item_name=models.CharField(max_length=300)

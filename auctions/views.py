@@ -5,6 +5,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 import json
+import traceback
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import *
@@ -19,28 +20,31 @@ def LISTING(request):
 
     if request.method=="POST":
 
-        #add to watchlist
+        #add to watchlist#
         try:
             get_data=json.loads(request.body)
             i_ac=get_data["listing_name"]
+            i_id=get_data["listing_id"]
             if get_data["operation"]=="Add To Watchlist":
-                Watchlist(u_name=request.user,item_name=i_ac).save()
+                Watchlist(u_name=request.user,item_id=i_id,item_name=i_ac).save()
                 return JsonResponse({"status":"Added to Watchlist"})
             elif get_data["operation"]=="Remove From Watchlist":
-                Watchlist.objects.all().filter(u_name=request.user).filter(item_name=i_ac).delete()
+                Watchlist.objects.all().filter(u_name=request.user).filter(item_id=i_id).delete()
                 return JsonResponse({"status":"Removed from Watchlist"})
+            else:
+                return JsonResponse({"status":"Problem"})
         except:
-            pass
+            traceback.print_exc()
 
         message=""
 
-        #new bid
+        #new bid#
         try: 
             get_data=json.loads(request.body)
             if get_data["operation"]=="new_bid":
 
-                n_bid=get_data["new_bid"]
-                g=Listing.objects.get(title=get_data["listing_name"])
+                n_bid=get_data["bid"]["new_bid"]
+                g=Listing.objects.get(id=get_data["bid"]["listing_id"])
                 g.c_price=n_bid
                 g.c_bidder=str(request.user)
                 g.save()
@@ -48,7 +52,7 @@ def LISTING(request):
         except:
             pass
 
-        #new_comment
+        #new_comment#
         try:
             get_data=json.loads(request.body)
 
@@ -60,44 +64,46 @@ def LISTING(request):
 
         #close listing
         try:
-            n=Listing.objects.get(title=request.POST["listing_name"])
+            n=Listing.objects.get(id=request.POST["listing_id"])
             n.status=request.POST["status_change"]
             n.save()
-            if Listing.objects.get(title=request.POST["listing_name"]).c_bidder==request.user:
+            if Listing.objects.get(id=request.POST["listing_id"]).c_bidder==request.user:
                 message="BIDDING CLOSED ---- UNSOLD"
-            message="BIDDING CLOSED ---- "+Listing.objects.get(title=request.POST["listing_name"]).c_bidder+"Wins!"
+            message="BIDDING CLOSED ---- "+Listing.objects.get(id=request.POST["listing_id"]).c_bidder+"Wins!"
         except:
             pass
 
         w=Watchlist.objects.all().filter(u_name=request.user)
         t="Add To Watchlist"
         for e in w:
-            if request.POST["listing_name"]==e.item_name:
+            if int(request.POST["listing_id"])==int(e.item_id):
                 t="Remove From Watchlist"
                 break
             else:
                 t="Add To Watchlist"
 
         return render(request, "auctions/LISTING.html", {
-        "listitem":Listing.objects.get(title=request.POST["listing_name"]),
+        "listitem":Listing.objects.get(id=request.POST["listing_id"]),
         "c_user":request.user,
-        "comnts":Comment.objects.all().filter(listing=request.POST["listing_name"]).order_by("com_on").reverse(),
+        "comnts":Comment.objects.all().filter(listing=request.POST["listing_id"]).order_by("com_on").reverse(),
         "but_message":t,
         "message":message})
 
     us=request.user
-    l_title=request.GET["l_name"]
+    l_title=request.GET["l_id"]
     w=Watchlist.objects.all().filter(u_name=request.user)
+    t="Add To Watchlist"
     for e in w:
-        if l_title==e.item_name:
+        if int(l_title)==int(e.item_id):
             t="Remove From Watchlist"
+            print(t)
             break
-    else:
-        t="Add To Watchlist"
+        else:
+            t="Add To Watchlist"
 
     return render(request, "auctions/LISTING.html",{
-        "listitem":Listing.objects.get(title=request.GET["l_name"]),
-        "comnts":Comment.objects.all().filter(listing=request.GET["l_name"]).order_by("com_on").reverse(),
+        "listitem":Listing.objects.get(id=request.GET["l_id"]),
+        "comnts":Comment.objects.all().filter(listing=request.GET["l_id"]).order_by("com_on").reverse(),
         "but_message":t,
         "c_user":request.user})
 

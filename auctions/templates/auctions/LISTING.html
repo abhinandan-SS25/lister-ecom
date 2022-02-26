@@ -83,7 +83,7 @@
                             {% if user.is_authenticated %}
                             <form>
                                 <div class="text-center">
-                                    <button data-listname="{{listitem.title}}" type="submit" class="btn btn-outline-primary" id="todo">{{but_message}}</button>
+                                    <button data-listid="{{listitem.id}}" data-listname="{{listitem.title}}" type="submit" class="btn btn-outline-primary" id="todo">{{but_message}}</button>
                                 </div>        
                             </form>{% endif %}
                     </div>
@@ -123,6 +123,7 @@
                             <form action="LISTING" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="listing_name" value="{{listitem.title}}">
+                                <input type="hidden" name="listing_id" value="{{listitem.id}}">
                                 <input type="hidden" name="status_change" value="C">
                                 <button type="submit" class="btn btn-danger">Close Current Listing</button>
                             </form>
@@ -132,7 +133,7 @@
 
                                 <form>
                                     <input type="number" step="any" placeholder="Enter bid for listing" name="new_bid" id="new_bid" style="width:40%; height: 38px; border-radius:5px; background-color:white">
-                                    <button data-user="{{user.get_username}}" data-currentbid="{{listitem.c_price}}" data-listingname="{{listitem.title}}" id="submitbid" type="submit" class="btn btn-outline-info" style="height:28px; padding:3px;">Enter New Bid</button>
+                                    <button data-user="{{user.get_username}}" data-currentbid="{{listitem.c_price}}" data-listingid="{{listitem.id}}" id="submitbid" type="submit" class="btn btn-outline-info" style="height:28px; padding:3px;">Enter New Bid</button>
                                 </form>
                             </div>
                             {% endif %}
@@ -149,7 +150,7 @@
                 {% if user.is_authenticated %}
                 <div class="form-group">
                     <textarea class="form-control" style="margin:20px;" name="new_comment" id="comment_body" placeholder="Add New Comment"></textarea>
-                    <button data-by="{{user.get_username}}" data-title="{{listitem.title}}" id="new_com_submit" class="form-control btn btn-outline-dark" style="border-left:hidden; border-right:hidden;" type="submit">Add Comment</button>
+                    <button data-by="{{user.get_username}}" data-id="{{listitem.title}}" data-title="{{listitem.id}}" id="new_com_submit" class="form-control btn btn-outline-dark" style="border-left:hidden; border-right:hidden;" type="submit">Add Comment</button>
                 </div>
                 {% endif %}
                 {% for cmt in comnts %}

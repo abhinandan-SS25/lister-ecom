@@ -10,9 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({
                 operation:button_click.innerHTML,
                 listing_name:button_click.dataset.listname,
+                listing_id:button_click.dataset.listid
             })
         }).then( function (response) {
-            console.log(response);
+            console.log(response.status);
         })
         .then( function () {
             if (button_click.innerHTML=="Add To Watchlist") {
@@ -52,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             operation:"new_comment",
             commentbody:new_comment_body,
             commentontitle:new_comment_title,
+            commentt:document.querySelector("#new_com_submit").dataset.id
         })
     }).then ( function () {
             var ncdiv = document.createElement("li");
@@ -74,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#submitbid").onclick = function () {
 
         current_amount=parseFloat(document.querySelector("#submitbid").dataset.currentbid);
-        newbid_title=document.querySelector("#submitbid").dataset.listingname;
+        newbid_id=document.querySelector("#submitbid").dataset.listingid;
         newbid_amount=parseFloat(document.querySelector("#new_bid").value);
         bidby=document.querySelector("#submitbid").dataset.user;
 
@@ -97,8 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 method:"POST",
                 body: JSON.stringify({
                     operation:"new_bid",
-                    new_bid:newbid_amount,
-                    listing_name:newbid_title,
+                    bid:{
+                        new_bid:newbid_amount,
+                        listing_id:newbid_id
+                    }
                 })
             }).then( function () {
                     document.querySelector("#bidstat").innerHTML=`
